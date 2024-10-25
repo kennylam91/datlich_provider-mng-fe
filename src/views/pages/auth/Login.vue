@@ -1,10 +1,24 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
+import { login } from '@/service/AuthService';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const email = ref('');
 const password = ref('');
 const checked = ref(false);
+
+const onSubmit = async () => {
+    console.log('submit: ', email.value, password.value);
+    try {
+        await login({ email: email.value, password: password.value });
+        router.push('/');
+    } catch (err) {
+        console.log(err);
+    }
+};
 </script>
 
 <template>
@@ -31,11 +45,11 @@ const checked = ref(false);
                                 />
                             </g>
                         </svg>
-                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to PrimeLand!</div>
+                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to DatLich!</div>
                         <span class="text-muted-color font-medium">Sign in to continue</span>
                     </div>
 
-                    <div>
+                    <form v-on:submit.prevent="onSubmit">
                         <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
                         <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model="email" />
 
@@ -49,8 +63,8 @@ const checked = ref(false);
                             </div>
                             <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                         </div>
-                        <Button label="Sign In" class="w-full" as="router-link" to="/"></Button>
-                    </div>
+                        <Button label="Sign In" class="w-full" type="submit"></Button>
+                    </form>
                 </div>
             </div>
         </div>
